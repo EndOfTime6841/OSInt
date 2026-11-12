@@ -22,7 +22,7 @@ jobs:
       - name: generate lock by installing dependencies
         run: |
           npm install @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated @react-native-async-storage/async-storage react-native-mmkv react-native-vector-icons react-native-svg @tanstack/react-query axios
-          npm install --save-dev @testing-library/react-native
+          npm install --save-dev @testing-library/react-native @babel/core @babel/preset-env @babel/runtime @react-native/babel-preset @react-native/eslint-config @react-native/metro-config @react-native/typescript-config @types/jest @types/react @types/react-test-renderer babel-jest eslint jest prettier react-test-renderer
       - name: commit and save it
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
