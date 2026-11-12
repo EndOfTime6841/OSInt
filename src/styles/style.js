@@ -13,5 +13,10 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         text: 'white',
         fomtSize: 35,
+    },
+    bottomBar: {
+        flex: 1,
+        position: 'fixed',
+        
     }
 });
