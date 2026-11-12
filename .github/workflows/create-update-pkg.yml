@@ -1,0 +1,42 @@
+name: Create or Update package.json and package-lock.json
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  create-pkg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+ 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+            node-version: '26'
+      - name: create package.json
+        run: |
+          npm init -y
+
+      - name: generate lock by installing dependencies
+        run: |
+          npm install @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated @react-native-async-storage/async-storage react-native-mmkv react-native-vector-icons react-native-svg @tanstack/react-query axios
+          npm install --save-dev @testing-library/react-native
+      - name: commit and save it
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add package.json
+          git commit -m "chore: generate package.json"
+          git push
+          
+          
+
+      
+
+    
+    
+
+  
+  
