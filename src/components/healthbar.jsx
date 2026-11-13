@@ -6,7 +6,7 @@ function hpBar() {
         <SafeAreaView>
             <internetConnection />
             <Text>Status is {status}</Text>
-            
+            <Text style={{flex:1, textAlign: 'right',}}>シ</Text>
         </SafeAreaView>
     )
 };

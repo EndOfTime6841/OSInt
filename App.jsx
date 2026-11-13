@@ -5,6 +5,7 @@ import { Pressable, SafeAreaView, StyleSheet, Text, View, ScrollView } from 'rea
 function App() {
     return (
         <SafeAreaView style={styles.mainBody}>
+            <hpBar />
             <ScrollView>
                 <Text>The World's Best *not* Osint scraper!</Text>
                 <Text>By your seal</Text>
