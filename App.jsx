@@ -1,8 +1,8 @@
 import { styles } from './src/styles/style.js';
 import React, { useState } from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View, ScrollView } from 'react-native';
-import { HpBar } from './src/components/healthbar.jsx';
-import { BotBar } from './src/components/creditbar.jsx';
+import HpBar from './src/components/healthbar.jsx';
+import BotBar from './src/components/creditbar.jsx';
 
 //app
 function App() {
