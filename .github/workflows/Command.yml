@@ -1,0 +1,46 @@
+name: Run command and push
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Shell command to run (e.g. npm install axios)'
+        required: true
+        type: string
+      commit_message:
+        description: 'Commit message'
+        required: false
+        default: 'Update from workflow'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run command
+        env:
+          USER_CMD: ${{ inputs.command }}
+        run: bash -c "$USER_CMD"
+
+      - name: Commit and push changes
+        env:
+          MSG: ${{ inputs.commit_message }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "$MSG"
+            git push
+          fi
