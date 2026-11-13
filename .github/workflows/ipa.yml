@@ -112,3 +112,19 @@ jobs:
         with:
           name: OSInt-unsigned-ipa
           path: ios/build/OSInt-unsigned.ipa
+  release:
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: OSInt-unsigned-ipa
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: alpha-${{ github.run_number }}
+          name: Alpha ${{ github.run_number }}
+          prerelease: true
+          files: OSInt-unsigned.ipa
