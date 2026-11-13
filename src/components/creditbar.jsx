@@ -14,4 +14,4 @@ function BotBar() {
         </SafeAreaView>
     );
 };
-export default botBar
+export default BotBar
