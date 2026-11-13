@@ -1,7 +1,7 @@
 import { Text, SafeAreaView, View, Clickable, Link, StyleSheet} from 'react-native';
 import React, { useState } from 'react';
 //app func
-function botBar() {
+function BotBar() {
     const localstyling = StyleSheet.create({
         bgCol: {
             backgroundColor: 'black',
