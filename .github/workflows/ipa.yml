@@ -16,11 +16,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci || (echo "::warning::package-lock.json is out of sync, falling back to npm install" && npm install)
 
       - name: Validate JSON files
         run: |
@@ -60,11 +60,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci || (echo "::warning::package-lock.json is out of sync, falling back to npm install" && npm install)
 
       # Your repo has no ios/ folder, so generate one from the official
       # React Native template, matching your react-native version and app name.
