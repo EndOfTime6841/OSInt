@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, Clickable, SafeAreaView, View } from 'react-native';
+import { intcon } from './src/components/internetconcheck.jsx';
 
 function hpBar() {
     return (
