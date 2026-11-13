@@ -5,8 +5,8 @@ import { intcon } from './src/components/internetconcheck.jsx';
 function hpBar() {
     return (
         <SafeAreaView>
-            <internetConnection />
-            <Text>Status is {status}</Text>
+            <internetConnection style= {{flex= 1, textAlign: 'left'}} />
+            <Text style={{flex: 1, tecxtAlign= 'center',}}>Status is {status}</Text>
             <Text style={{flex:1, textAlign: 'right',}}>シ</Text>
         </SafeAreaView>
     )
