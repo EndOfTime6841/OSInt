@@ -13,4 +13,4 @@ function Intcon() {
         )
     }
 }
-export default intcon
+export default Intcon
