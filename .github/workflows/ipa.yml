@@ -1,0 +1,114 @@
+name: Check & Build iOS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # ---------- 1. Sanity check: fails fast if the code is broken ----------
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate JSON files
+        run: |
+          for f in package.json app.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" \
+              && echo "OK: $f" || { echo "::error file=$f::Invalid JSON"; exit 1; }
+          done
+
+      - name: Check entry files exist
+        run: |
+          test -f index.js || { echo "::error::index.js is missing"; exit 1; }
+          test -f App.jsx || test -f App.js || { echo "::error::App.jsx is missing"; exit 1; }
+
+      - name: Lint (only if an ESLint config exists)
+        run: |
+          if ls .eslintrc* eslint.config.* >/dev/null 2>&1; then
+            npx eslint . --ext .js,.jsx
+          else
+            echo "No ESLint config found, skipping"
+          fi
+
+      - name: Bundle JS (catches syntax errors, bad imports, missing files)
+        run: |
+          npx react-native bundle \
+            --platform ios \
+            --dev false \
+            --entry-file index.js \
+            --bundle-output /tmp/main.jsbundle
+
+  # ---------- 2. Build the iOS app (only runs if the check passes) ----------
+  build:
+    needs: check
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Your repo has no ios/ folder, so generate one from the official
+      # React Native template, matching your react-native version and app name.
+      - name: Generate ios/ project
+        run: |
+          RN_VERSION=$(node -p "require('./package.json').dependencies['react-native'].replace(/[^0-9.]/g,'')")
+          APP_NAME=$(node -p "require('./app.json').name")
+          echo "react-native $RN_VERSION, app name $APP_NAME"
+          if [ ! -d ios ]; then
+            cd /tmp
+            npx --yes @react-native-community/cli@latest init "$APP_NAME" \
+              --version "$RN_VERSION" --skip-install --skip-git-init
+            cp -R "/tmp/$APP_NAME/ios" "$GITHUB_WORKSPACE/ios"
+          fi
+
+      - name: Install CocoaPods
+        working-directory: ios
+        run: pod install
+
+      - name: Build unsigned archive
+        working-directory: ios
+        run: |
+          WORKSPACE=$(ls -d *.xcworkspace | head -n 1)
+          SCHEME="${WORKSPACE%.xcworkspace}"
+          xcodebuild archive \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -archivePath "$PWD/build/App.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package .ipa
+        working-directory: ios/build
+        run: |
+          mkdir Payload
+          cp -R App.xcarchive/Products/Applications/*.app Payload/
+          zip -qr OSInt-unsigned.ipa Payload
+
+      - name: Upload .ipa
+        uses: actions/upload-artifact@v4
+        with:
+          name: OSInt-unsigned-ipa
+          path: ios/build/OSInt-unsigned.ipa
