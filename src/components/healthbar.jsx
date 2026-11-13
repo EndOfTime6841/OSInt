@@ -11,4 +11,4 @@ function HpBar() {
         </SafeAreaView>
     )
 };
-export default hpBar
+export default HpBar
