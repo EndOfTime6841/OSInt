@@ -8,12 +8,12 @@ import BotBar from './src/components/creditbar.jsx';
 function App() {
     return (
         <SafeAreaView style={styles.mainBody}>
-            <HpBar />
+            <HpBar style={{flex: 1, top: 0, width: 1,}}/>
             <ScrollView>
                 <Text>The World's Best *not* Osint scraper!</Text>
                 <Text>By your seal</Text>
             </ScrollView>
-            <BotBar />
+            <BotBar style={{flex: 1, bottom: 0, width: 1}} />
         </SafeAreaView>
     )
 }
