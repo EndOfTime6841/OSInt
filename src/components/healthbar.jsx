@@ -6,7 +6,7 @@ function HpBar() {
     return (
         <SafeAreaView>
             <Intcon style={{flex: 1, textAlign: 'left'}} />
-            <Text style={{flex: 1, textAlign:'center',}}>Status is {status}</Text>
+            <Text style={{flex: 1, textAlign:'center',}}>Status is PLACEHOLDER</Text>
             <Text style={{flex:1, textAlign: 'right',}}>シ</Text>
         </SafeAreaView>
     )
