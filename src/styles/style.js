@@ -6,13 +6,14 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        backgrondColor: '#270061'
+        backgrondColor: '#270061',
     },
     titleText: {
         flex: 1,
         textAlign: 'center',
         text: 'white',
-        fomtSize: 35,
+        fontSize: 35,
+        fontWeight: 900,
     },
     bottomBar: {
         flex: 1,
